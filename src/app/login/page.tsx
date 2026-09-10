@@ -4,7 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ShieldCheck, LogIn, Lock, Mail } from 'lucide-react';
+import { LogIn, Lock, Mail } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
@@ -48,10 +48,14 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-md space-y-6">
-      {/* Brand Banner */}
-      <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-brand-500 text-white flex items-center justify-center mx-auto shadow-md">
-          <ShieldCheck className="w-6 h-6" />
+      {/* Brand Logo Banner */}
+      <div className="text-center space-y-3">
+        <div className="w-16 h-16 rounded-2xl bg-white p-1 border border-slate-200 dark:border-slate-800 shadow-md mx-auto">
+          <img
+            src="/logo.png"
+            alt="COMESA Competition & Consumer Commission Logo"
+            className="w-full h-full object-contain"
+          />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Sign In to COMESA LMS</h1>
         <p className="text-xs text-slate-500 dark:text-slate-400">

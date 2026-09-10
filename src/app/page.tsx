@@ -25,6 +25,14 @@ export default async function CatalogPage() {
       {/* Advocacy Hero Banner */}
       <section className="relative bg-gradient-to-b from-brand-50/50 via-white to-white dark:from-slate-900/50 dark:via-slate-950 dark:to-slate-950 border-b border-slate-200 dark:border-slate-800 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center space-y-6">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-white p-2 border border-slate-200 dark:border-slate-800 shadow-md">
+            <img
+              src="/logo.png"
+              alt="COMESA Competition & Consumer Commission Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-950/80 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold">
             <Shield className="w-3.5 h-3.5 text-brand-500" />
             Official COMESA Competition & Consumer Commission Platform
@@ -54,7 +62,6 @@ export default async function CatalogPage() {
             <p className="text-xs text-slate-500 dark:text-slate-400">Browse available advocacy topics without an account.</p>
           </div>
 
-          {/* Search Input Bar */}
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
             <input

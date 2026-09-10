@@ -2,9 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { ThemeToggle } from './theme-toggle';
-import { ShieldCheck, BookOpen, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { BookOpen, LogOut, LayoutDashboard } from 'lucide-react';
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -12,12 +13,16 @@ export function Navbar() {
   const isAdmin = user?.role === 'ADMIN';
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Official Brand Logo + Text */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center text-white shadow-sm group-hover:bg-brand-600 transition-colors">
-            <ShieldCheck className="w-5 h-5" />
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 border border-slate-200 dark:border-slate-700 shadow-sm group-hover:scale-105 transition-transform shrink-0">
+            <img
+              src="/logo.png"
+              alt="COMESA Competition & Consumer Commission Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <div className="font-bold text-base tracking-tight text-slate-900 dark:text-slate-50 leading-tight">
