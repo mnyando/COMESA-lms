@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import slugify from 'slugify';
+import { slugify } from '@/lib/slugify';
 
 export async function GET(req: NextRequest) {
   try {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Title and description are required.' }, { status: 400 });
     }
 
-    const baseSlug = slugify(title, { lower: true, strict: true });
+    const baseSlug = slugify(title);
     const existingCourse = await prisma.course.findUnique({
       where: { slug: baseSlug },
     });

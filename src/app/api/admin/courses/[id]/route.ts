@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { cleanupLessonFiles, deleteStorageFile } from '@/lib/storage';
-import slugify from 'slugify';
+import { slugify } from '@/lib/slugify';
 
 export async function PATCH(
   req: Request,
@@ -23,9 +23,9 @@ export async function PATCH(
     // Check slug uniqueness if title or custom slug is updated
     let targetSlug: string | undefined = undefined;
     if (customSlug) {
-      targetSlug = slugify(customSlug, { lower: true, strict: true });
+      targetSlug = slugify(customSlug);
     } else if (title) {
-      targetSlug = slugify(title, { lower: true, strict: true });
+      targetSlug = slugify(title);
     }
 
     if (targetSlug) {
