@@ -113,7 +113,7 @@ export default async function CatalogPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/80 mt-4 flex items-center justify-between">
+                  <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                     <span className="text-xs font-bold text-[#34C64A] flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Free Public Access
                     </span>
