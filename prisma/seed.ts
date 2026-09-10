@@ -39,12 +39,14 @@ async function main() {
   // 2. Create Sample Advocacy Course: "Understanding Your Consumer Rights in COMESA"
   const course1 = await prisma.course.upsert({
     where: { slug: 'understanding-consumer-rights' },
-    update: {},
+    update: {
+      coverImage: '/consumer.jpg',
+    },
     create: {
       title: 'Understanding Your Consumer Rights in the COMESA Common Market',
       slug: 'understanding-consumer-rights',
       description: 'Learn the core principles of cross-border consumer protection, fair trade practices, and how to assert your rights as a consumer across COMESA Member States.',
-      coverImage: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=80',
+      coverImage: '/consumer.jpg',
       published: true,
       modules: {
         create: [
@@ -161,12 +163,14 @@ async function main() {
   // 3. Create Second Course: "Competition Law Essentials for Small Businesses"
   await prisma.course.upsert({
     where: { slug: 'competition-law-for-smes' },
-    update: {},
+    update: {
+      coverImage: '/competition.jpg',
+    },
     create: {
       title: 'Competition Law Essentials for Small & Medium Enterprises (SMEs)',
       slug: 'competition-law-for-smes',
       description: 'A practical guide for business owners on avoiding anti-competitive agreements, understanding merger controls, and building fair trade compliance programs.',
-      coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
+      coverImage: '/competition.jpg',
       published: true,
       modules: {
         create: [
@@ -200,7 +204,7 @@ async function main() {
     }
   });
 
-  console.log('Sample Advocacy courses seeded successfully!');
+  console.log('Sample Advocacy courses seeded with official cover images!');
 }
 
 main()
