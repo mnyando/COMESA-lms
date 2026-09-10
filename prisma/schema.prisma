@@ -1,0 +1,86 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  LEARNER
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  CONVERTED_DOCUMENT
+}
+
+model User {
+  id             String     @id @default(cuid())
+  name           String
+  email          String     @unique
+  passwordHash   String
+  role           Role       @default(LEARNER)
+  selfRegistered Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  progress       Progress[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  coverImage  String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  modules     Module[]
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id                   String     @id @default(cuid())
+  moduleId             String
+  module               Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title                String
+  order                Int        @default(0)
+  type                 LessonType @default(TEXT)
+  contentBlocks        Json       @default("[]")
+  videoUrl             String?
+  videoThumbnailUrl    String?
+  videoDurationSeconds Int?
+  sourceFileUrl        String?
+  published            Boolean    @default(false)
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  progress             Progress[]
+}
+
+model Progress {
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId            String
+  lesson              Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed           Boolean   @default(false)
+  lastPositionSeconds Float     @default(0)
+  completedAt         DateTime?
+  updatedAt           DateTime  @updatedAt
+
+  @@unique([userId, lessonId])
+}

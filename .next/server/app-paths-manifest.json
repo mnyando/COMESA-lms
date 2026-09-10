@@ -1,0 +1,21 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/courses/new/page": "app/admin/courses/new/page.js",
+  "/api/admin/courses/[id]/modules/route": "app/api/admin/courses/[id]/modules/route.js",
+  "/api/admin/courses/route": "app/api/admin/courses/route.js",
+  "/admin/courses/[id]/lessons/new/page": "app/admin/courses/[id]/lessons/new/page.js",
+  "/api/admin/lessons/route": "app/api/admin/lessons/route.js",
+  "/api/admin/upload/route": "app/api/admin/upload/route.js",
+  "/api/admin/publish/route": "app/api/admin/publish/route.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/progress/route": "app/api/progress/route.js",
+  "/api/storage/[...path]/route": "app/api/storage/[...path]/route.js",
+  "/register/page": "app/register/page.js",
+  "/login/page": "app/login/page.js",
+  "/admin/courses/[id]/builder/page": "app/admin/courses/[id]/builder/page.js",
+  "/admin/courses/page": "app/admin/courses/page.js",
+  "/courses/[slug]/lessons/[lessonId]/page": "app/courses/[slug]/lessons/[lessonId]/page.js",
+  "/courses/[slug]/page": "app/courses/[slug]/page.js",
+  "/page": "app/page.js"
+}
