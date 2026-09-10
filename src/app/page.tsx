@@ -23,9 +23,9 @@ export default async function CatalogPage() {
   return (
     <div className="min-h-screen space-y-12 pb-16">
       {/* Advocacy Hero Banner */}
-      <section className="relative bg-gradient-to-b from-brand-50/50 via-white to-white dark:from-slate-900/50 dark:via-slate-950 dark:to-slate-950 border-b border-slate-200 dark:border-slate-800 py-16 px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-b from-blue-50/40 via-white to-white dark:from-slate-900/50 dark:via-slate-950 dark:to-slate-950 border-b border-slate-200 dark:border-slate-800 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center space-y-6">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-white p-2 border border-slate-200 dark:border-slate-800 shadow-md">
+          <div className="w-24 h-24 mx-auto rounded-3xl bg-white p-2 border border-slate-200 dark:border-slate-800 shadow-md">
             <img
               src="/logo.png"
               alt="COMESA Competition & Consumer Commission Logo"
@@ -33,23 +33,23 @@ export default async function CatalogPage() {
             />
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-950/80 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold">
-            <Shield className="w-3.5 h-3.5 text-brand-500" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F0FDF4] dark:bg-emerald-950/50 border border-[#BBF7D0] dark:border-emerald-800 text-[#21852F] dark:text-[#34C64A] text-xs font-semibold">
+            <Shield className="w-4 h-4 text-[#34C64A]" />
             Official COMESA Competition & Consumer Commission Platform
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight leading-tight">
-            Know Your Rights. <span className="text-brand-500">Protect Your Business.</span>
+            Know Your Rights. <span className="text-[#4168DD]">Protect Your Business.</span>
           </h1>
 
           <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
             Free, accessible educational modules for consumers and small business owners across 21 COMESA Member States on competition law, fair trade, and consumer rights.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400 font-medium pt-2">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> 100% Free Public Access</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> Plain Language Guides</span>
-            <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-brand-500" /> Verified Legal Frameworks</span>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-600 dark:text-slate-400 font-semibold pt-2">
+            <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#34C64A]" /> 100% Free Public Access</span>
+            <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#34C64A]" /> Plain Language Guides</span>
+            <span className="flex items-center gap-2"><Award className="w-4 h-4 text-[#4168DD]" /> Verified Legal Frameworks</span>
           </div>
         </div>
       </section>
@@ -67,7 +67,7 @@ export default async function CatalogPage() {
             <input
               type="text"
               placeholder="Search courses & topics..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none focus:border-brand-500 transition-colors"
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none focus:border-[#4168DD] transition-colors"
             />
           </div>
         </div>
@@ -86,7 +86,7 @@ export default async function CatalogPage() {
               return (
                 <div
                   key={course.id}
-                  className="group flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all hover:shadow-md overflow-hidden"
+                  className="group flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#4168DD]/40 dark:hover:border-[#4168DD]/40 transition-all hover:shadow-md overflow-hidden"
                 >
                   <div>
                     {course.coverImage && (
@@ -96,14 +96,15 @@ export default async function CatalogPage() {
                           alt={course.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/70 backdrop-blur-md text-[11px] font-semibold text-white">
+                        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md text-[11px] font-semibold text-white flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#34C64A]" />
                           {course.modules.length} Modules • {totalLessons} Lessons
                         </div>
                       </div>
                     )}
 
                     <div className="p-6 space-y-3">
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-brand-500 transition-colors line-clamp-2">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#4168DD] transition-colors line-clamp-2">
                         {course.title}
                       </h3>
                       <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
@@ -113,12 +114,12 @@ export default async function CatalogPage() {
                   </div>
 
                   <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/80 mt-4 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-brand-600 dark:text-brand-400">
-                      Free Access
+                    <span className="text-xs font-bold text-[#34C64A] flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Free Public Access
                     </span>
                     <Link
                       href={`/courses/${course.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-500 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#4168DD] hover:text-[#3352C4] transition-colors"
                     >
                       View Course <ChevronRight className="w-4 h-4" />
                     </Link>

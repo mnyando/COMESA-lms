@@ -9,10 +9,10 @@
     --bg-card: #FFFFFF;
     --border-color: #E2E8F0;
     --text-primary: #0F172A;
-    --text-secondary: #64748B;
+    --text-secondary: #475569;
     --text-muted: #94A3B8;
-    --brand-accent: #0284C7;
-    --brand-hover: #0369A1;
+    --brand-blue: #4168DD;
+    --brand-green: #34C64A;
   }
 
   .dark {
@@ -23,8 +23,8 @@
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
     --text-muted: #64748B;
-    --brand-accent: #38BDF8;
-    --brand-hover: #0284C7;
+    --brand-blue: #5B80F0;
+    --brand-green: #34C64A;
   }
 
   body {
@@ -35,7 +35,6 @@
   }
 }
 
-/* Custom scrollbar for modern feel */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

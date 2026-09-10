@@ -56,7 +56,7 @@ function RegisterForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center space-y-3">
-        <div className="w-16 h-16 rounded-2xl bg-white p-1 border border-slate-200 dark:border-slate-800 shadow-md mx-auto">
+        <div className="w-20 h-20 rounded-2xl bg-white p-1 border border-slate-200 dark:border-slate-800 shadow-md mx-auto">
           <img
             src="/logo.png"
             alt="COMESA Competition & Consumer Commission Logo"
@@ -87,7 +87,7 @@ function RegisterForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Jane Doe"
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-brand-500"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-[#4168DD]"
               required
             />
           </div>
@@ -104,7 +104,7 @@ function RegisterForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-brand-500"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-[#4168DD]"
               required
             />
           </div>
@@ -121,7 +121,7 @@ function RegisterForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-brand-500"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs outline-none focus:border-[#4168DD]"
               required
             />
           </div>
@@ -130,7 +130,7 @@ function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 font-bold text-white text-xs transition-colors shadow-sm flex items-center justify-center gap-2 mt-2"
+          className="w-full py-2.5 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] font-bold text-white text-xs transition-colors shadow-sm flex items-center justify-center gap-2 mt-2"
         >
           <UserPlus className="w-4 h-4" />
           {loading ? 'Creating Account...' : 'Create Account & Continue'}
@@ -139,7 +139,7 @@ function RegisterForm() {
 
       <p className="text-center text-xs text-slate-500">
         Already have an account?{' '}
-        <Link href="/login" className="font-bold text-brand-500 hover:underline">
+        <Link href="/register" className="font-bold text-[#4168DD] hover:underline">
           Sign in
         </Link>
       </p>

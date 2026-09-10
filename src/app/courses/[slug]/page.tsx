@@ -31,7 +31,6 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
     notFound();
   }
 
-  // Get user progress if logged in
   let completedLessonIds: string[] = [];
   if (user?.id) {
     const progressRecords = await prisma.progress.findMany({
@@ -50,7 +49,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
     <div className="min-h-screen max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
       {/* Course Header Banner */}
       <div className="p-8 rounded-3xl bg-slate-900 text-white border border-slate-800 space-y-6 relative overflow-hidden">
-        <div className="flex items-center gap-2 text-xs font-semibold text-brand-400">
+        <div className="flex items-center gap-2 text-xs font-semibold text-[#34C64A]">
           <ShieldCheck className="w-4 h-4" /> Official COMESA Consumer Rights Module
         </div>
 
@@ -67,24 +66,24 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
           <div className="space-y-2 pt-2 max-w-md">
             <div className="flex justify-between text-xs font-semibold text-slate-300">
               <span>Course Progress</span>
-              <span>{progressPercent}% Complete ({completedCount}/{allLessons.length} lessons)</span>
+              <span className="text-[#34C64A] font-bold">{progressPercent}% Complete ({completedCount}/{allLessons.length} lessons)</span>
             </div>
-            <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-brand-500 transition-all duration-500"
+                className="h-full bg-[#34C64A] transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
           </div>
         ) : (
-          <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-slate-300 flex items-center justify-between gap-4">
+          <div className="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs text-slate-300 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-brand-400" />
+              <Lock className="w-4 h-4 text-[#4168DD]" />
               <span>Browsing as Guest. Create a free account to track your progress and resume lessons.</span>
             </div>
             <Link
               href={`/register?callbackUrl=/courses/${course.slug}`}
-              className="px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 font-semibold text-white transition-colors shrink-0"
+              className="px-3.5 py-1.5 rounded-lg bg-[#4168DD] hover:bg-[#3352C4] font-bold text-white transition-colors shrink-0"
             >
               Sign Up
             </Link>
@@ -95,7 +94,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
           <div>
             <Link
               href={`/courses/${course.slug}/lessons/${firstLesson.id}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 font-bold text-white text-xs transition-colors shadow-md"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] font-bold text-white text-xs transition-colors shadow-md"
             >
               <PlayCircle className="w-4 h-4" />
               {completedCount > 0 ? 'Continue Course' : 'Start Course'}
@@ -107,7 +106,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
       {/* Curriculum Outline */}
       <div className="space-y-6">
         <h2 className="text-xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-brand-500" /> Course Curriculum ({course.modules.length} Modules)
+          <BookOpen className="w-5 h-5 text-[#4168DD]" /> Course Curriculum ({course.modules.length} Modules)
         </h2>
 
         <div className="space-y-4">
@@ -137,13 +136,13 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
                     >
                       <div className="flex items-center gap-3">
                         {isCompleted ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-[#34C64A] shrink-0" />
                         ) : lesson.type === 'VIDEO' ? (
-                          <Video className="w-4 h-4 text-brand-500 shrink-0" />
+                          <Video className="w-4 h-4 text-[#4168DD] shrink-0" />
                         ) : (
                           <FileText className="w-4 h-4 text-slate-400 shrink-0" />
                         )}
-                        <span className="text-xs font-medium text-slate-800 dark:text-slate-200 group-hover:text-brand-500 transition-colors">
+                        <span className="text-xs font-medium text-slate-800 dark:text-slate-200 group-hover:text-[#4168DD] transition-colors">
                           {lesson.title}
                         </span>
                       </div>
@@ -152,7 +151,7 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
                         <span className="text-[11px] text-slate-400 font-mono capitalize">
                           {lesson.type.toLowerCase().replace('_', ' ')}
                         </span>
-                        <PlayCircle className="w-4 h-4 text-slate-400 group-hover:text-brand-500 transition-colors" />
+                        <PlayCircle className="w-4 h-4 text-slate-400 group-hover:text-[#4168DD] transition-colors" />
                       </div>
                     </Link>
                   );

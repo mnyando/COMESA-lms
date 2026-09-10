@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { Plus, BookOpen, Layers, Edit, Eye, EyeOff, LayoutDashboard } from 'lucide-react';
+import { Plus, BookOpen, Layers, Edit, Eye, LayoutDashboard } from 'lucide-react';
 import { AdminPublishToggle } from '@/components/admin-publish-toggle';
 
 export const revalidate = 0;
@@ -33,8 +33,8 @@ export default async function AdminCoursesPage() {
       {/* Top Admin Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 text-xs font-semibold mb-2">
-            <LayoutDashboard className="w-3.5 h-3.5" /> CCCC Admin Management Portal
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-brand-950/80 text-[#4168DD] dark:text-brand-300 text-xs font-semibold mb-2">
+            <LayoutDashboard className="w-3.5 h-3.5 text-[#34C64A]" /> CCCC Admin Management Portal
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
             Advocacy Course Library
@@ -46,9 +46,9 @@ export default async function AdminCoursesPage() {
 
         <Link
           href="/admin/courses/new"
-          className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 font-bold text-white text-xs flex items-center gap-2 transition-colors shadow-sm"
+          className="px-4 py-2.5 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] font-bold text-white text-xs flex items-center gap-2 transition-colors shadow-sm"
         >
-          <Plus className="w-4 h-4" /> Create New Course
+          <Plus className="w-4 h-4 text-[#34C64A]" /> Create New Course
         </Link>
       </div>
 
@@ -78,8 +78,8 @@ export default async function AdminCoursesPage() {
                     {course.description}
                   </p>
                   <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 pt-1">
-                    <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-brand-500" /> {course.modules.length} Modules</span>
-                    <span className="flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5 text-brand-500" /> {totalLessons} Lessons</span>
+                    <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-[#4168DD]" /> {course.modules.length} Modules</span>
+                    <span className="flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5 text-[#34C64A]" /> {totalLessons} Lessons</span>
                   </div>
                 </div>
 
@@ -93,7 +93,7 @@ export default async function AdminCoursesPage() {
                   </Link>
                   <Link
                     href={`/admin/courses/${course.id}/builder`}
-                    className="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-xs font-bold text-white transition-colors flex items-center gap-1.5 shadow-sm"
+                    className="px-4 py-2 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] text-xs font-bold text-white transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <Edit className="w-3.5 h-3.5" /> Course Builder
                   </Link>

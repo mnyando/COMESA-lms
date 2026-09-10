@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
 
 interface CustomVideoPlayerProps {
   src: string;
@@ -126,36 +126,32 @@ export function CustomVideoPlayer({
         className="w-full h-auto aspect-video object-cover cursor-pointer"
       />
 
-      {/* Center Play Button overlay when paused */}
       {!isPlaying && (
         <button
           onClick={togglePlay}
-          className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-brand-500/90 hover:bg-brand-500 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105"
+          className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-[#4168DD]/90 hover:bg-[#4168DD] text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105"
         >
           <Play className="w-8 h-8 fill-current ml-1" />
         </button>
       )}
 
-      {/* Video Chrome Control Bar */}
       <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
-        {/* Scrub Bar */}
         <input
           type="range"
           min={0}
           max={duration || 100}
           value={currentTime}
           onChange={handleSeek}
-          className="w-full h-1.5 bg-slate-700/80 accent-brand-500 rounded-lg cursor-pointer hover:h-2 transition-all"
+          className="w-full h-1.5 bg-slate-700/80 accent-[#4168DD] rounded-lg cursor-pointer hover:h-2 transition-all"
         />
 
-        {/* Controls Bottom Row */}
         <div className="flex items-center justify-between text-xs text-slate-200">
           <div className="flex items-center gap-3">
-            <button onClick={togglePlay} className="p-1 hover:text-brand-400 transition-colors">
+            <button onClick={togglePlay} className="p-1 hover:text-[#4168DD] transition-colors">
               {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 fill-current" />}
             </button>
             <div className="flex items-center gap-2">
-              <button onClick={toggleMute} className="p-1 hover:text-brand-400 transition-colors">
+              <button onClick={toggleMute} className="p-1 hover:text-[#4168DD] transition-colors">
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </button>
               <input
@@ -165,7 +161,7 @@ export function CustomVideoPlayer({
                 step={0.1}
                 value={isMuted ? 0 : volume}
                 onChange={handleVolumeChange}
-                className="w-16 h-1 bg-slate-700 accent-brand-500 rounded cursor-pointer"
+                className="w-16 h-1 bg-slate-700 accent-[#4168DD] rounded cursor-pointer"
               />
             </div>
             <span className="font-mono text-[11px] text-slate-400">
@@ -174,14 +170,13 @@ export function CustomVideoPlayer({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Speed Selector */}
             <div className="flex items-center gap-1 bg-slate-800/80 rounded-lg px-2 py-0.5 border border-slate-700">
               {[0.75, 1, 1.25, 1.5, 2].map((s) => (
                 <button
                   key={s}
                   onClick={() => changeSpeed(s)}
                   className={`px-1 text-[10px] font-medium rounded ${
-                    playbackSpeed === s ? 'text-brand-400 font-bold' : 'text-slate-400 hover:text-white'
+                    playbackSpeed === s ? 'text-[#4168DD] font-bold' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {s}x
@@ -189,7 +184,7 @@ export function CustomVideoPlayer({
               ))}
             </div>
 
-            <button onClick={toggleFullscreen} className="p-1 hover:text-brand-400 transition-colors">
+            <button onClick={toggleFullscreen} className="p-1 hover:text-[#4168DD] transition-colors">
               <Maximize className="w-4 h-4" />
             </button>
           </div>

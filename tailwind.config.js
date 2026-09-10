@@ -10,12 +10,20 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#F0F9FF',
-          100: '#E0F2FE',
-          200: '#BAE6FD',
-          500: '#0284C7', // Refined COMESA Blue/Teal accent
-          600: '#0369A1',
-          700: '#075985',
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          500: '#4168DD', // Official COMESA Blue
+          600: '#3352C4',
+          700: '#273EA3',
+        },
+        comesaGreen: {
+          50: '#F0FDF4',
+          100: '#DCFCE7',
+          200: '#BBF7D0',
+          500: '#34C64A', // Official COMESA Green
+          600: '#2AA53B',
+          700: '#21852F',
         },
         surface: {
           light: '#FFFFFF',
