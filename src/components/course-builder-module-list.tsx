@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus, Video, FileText, FileUp, Layers, Trash2, Edit } from 'lucide-react';
+import { Plus, Video, FileText, FileUp, Layers, Trash2, Edit, Check, X } from 'lucide-react';
 import { AdminPublishToggle } from './admin-publish-toggle';
 
 export function CourseBuilderModuleList({
@@ -17,6 +17,11 @@ export function CourseBuilderModuleList({
   const [modules, setModules] = useState(initialModules);
   const [newModuleTitle, setNewModuleTitle] = useState('');
   const [addingModule, setAddingModule] = useState(false);
+
+  // Module Editing State
+  const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
+  const [editingModuleTitle, setEditingModuleTitle] = useState('');
+  const [savingModule, setSavingModule] = useState(false);
 
   const handleAddModule = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +46,73 @@ export function CourseBuilderModuleList({
     }
   };
 
+  const handleStartEditModule = (mod: any) => {
+    setEditingModuleId(mod.id);
+    setEditingModuleTitle(mod.title);
+  };
+
+  const handleSaveModuleTitle = async (moduleId: string) => {
+    if (!editingModuleTitle.trim()) return;
+
+    try {
+      setSavingModule(true);
+      const res = await fetch(`/api/admin/modules/${moduleId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: editingModuleTitle }),
+      });
+
+      if (res.ok) {
+        setEditingModuleId(null);
+        router.refresh();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSavingModule(false);
+    }
+  };
+
+  const handleDeleteModule = async (moduleId: string, moduleTitle: string) => {
+    if (
+      !confirm(
+        `Are you sure you want to delete "${moduleTitle}" and all its lessons? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/admin/modules/${moduleId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        router.refresh();
+      }
+    } catch (e) {
+      console.error('Failed to delete module:', e);
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId: string, lessonTitle: string) => {
+    if (!confirm(`Are you sure you want to delete lesson "${lessonTitle}"?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/admin/lessons/${lessonId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        router.refresh();
+      }
+    } catch (e) {
+      console.error('Failed to delete lesson:', e);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Modules List */}
@@ -50,20 +122,70 @@ export function CourseBuilderModuleList({
           className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
         >
           {/* Module Header */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-brand-500" />
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
-                Module {mIdx + 1}: {mod.title}
-              </h3>
+          <div className="p-4 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 flex-1">
+              <Layers className="w-4 h-4 text-[#4168DD] shrink-0" />
+              {editingModuleId === mod.id ? (
+                <div className="flex items-center gap-2 flex-1 max-w-md">
+                  <input
+                    type="text"
+                    value={editingModuleTitle}
+                    onChange={(e) => setEditingModuleTitle(e.target.value)}
+                    className="w-full px-2.5 py-1 text-xs font-bold bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none focus:border-[#4168DD]"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleSaveModuleTitle(mod.id)}
+                    disabled={savingModule}
+                    className="p-1 rounded-lg bg-[#34C64A] text-white hover:bg-emerald-600"
+                    title="Save title"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingModuleId(null)}
+                    className="p-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-300"
+                    title="Cancel"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                    Module {mIdx + 1}: {mod.title}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => handleStartEditModule(mod)}
+                    className="p-1 text-slate-400 hover:text-[#4168DD] transition-colors"
+                    title="Edit Module Title"
+                  >
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
 
-            <Link
-              href={`/admin/courses/${courseId}/lessons/new?moduleId=${mod.id}`}
-              className="px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 font-bold text-white text-xs flex items-center gap-1.5 shadow-sm transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5" /> Add Lesson
-            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleDeleteModule(mod.id, mod.title)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                title="Delete Module"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+
+              <Link
+                href={`/admin/courses/${courseId}/lessons/new?moduleId=${mod.id}`}
+                className="px-3 py-1.5 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] font-bold text-white text-xs flex items-center gap-1.5 shadow-sm transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5 text-[#34C64A]" /> Add Lesson
+              </Link>
+            </div>
           </div>
 
           {/* Lessons in Module */}
@@ -80,9 +202,9 @@ export function CourseBuilderModuleList({
                 >
                   <div className="flex items-center gap-3">
                     {lesson.type === 'VIDEO' ? (
-                      <Video className="w-4 h-4 text-brand-500 shrink-0" />
+                      <Video className="w-4 h-4 text-[#4168DD] shrink-0" />
                     ) : lesson.type === 'CONVERTED_DOCUMENT' ? (
-                      <FileUp className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <FileUp className="w-4 h-4 text-[#34C64A] shrink-0" />
                     ) : (
                       <FileText className="w-4 h-4 text-slate-400 shrink-0" />
                     )}
@@ -97,15 +219,23 @@ export function CourseBuilderModuleList({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <AdminPublishToggle lessonId={lesson.id} initialPublished={lesson.published} />
                     <Link
                       href={`/admin/courses/${courseId}/lessons/${lesson.id}/edit`}
-                      className="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-[#4168DD] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                       title="Edit Lesson"
                     >
                       <Edit className="w-3.5 h-3.5" />
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteLesson(lesson.id, lesson.title)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                      title="Delete Lesson"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               ))
@@ -115,13 +245,16 @@ export function CourseBuilderModuleList({
       ))}
 
       {/* Add New Module Form */}
-      <form onSubmit={handleAddModule} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-300 dark:border-slate-800 flex items-center gap-3">
+      <form
+        onSubmit={handleAddModule}
+        className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-300 dark:border-slate-800 flex items-center gap-3"
+      >
         <input
           type="text"
           value={newModuleTitle}
           onChange={(e) => setNewModuleTitle(e.target.value)}
           placeholder="New module title (e.g. Module 2: Cross-Border Consumer Redress)..."
-          className="flex-1 p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none focus:border-brand-500"
+          className="flex-1 p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none focus:border-[#4168DD]"
         />
         <button
           type="submit"

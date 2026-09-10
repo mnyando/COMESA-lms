@@ -87,15 +87,21 @@ export default async function AdminCoursesPage() {
                   <Link
                     href={`/courses/${course.slug}`}
                     target="_blank"
-                    className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5"
+                    className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5"
                   >
                     <Eye className="w-3.5 h-3.5" /> Public View
+                  </Link>
+                  <Link
+                    href={`/admin/courses/${course.id}/edit`}
+                    className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5"
+                  >
+                    <Edit className="w-3.5 h-3.5 text-[#4168DD]" /> Edit Details
                   </Link>
                   <Link
                     href={`/admin/courses/${course.id}/builder`}
                     className="px-4 py-2 rounded-xl bg-[#4168DD] hover:bg-[#3352C4] text-xs font-bold text-white transition-colors flex items-center gap-1.5 shadow-sm"
                   >
-                    <Edit className="w-3.5 h-3.5" /> Course Builder
+                    <Layers className="w-3.5 h-3.5 text-[#34C64A]" /> Course Builder
                   </Link>
                 </div>
               </div>
