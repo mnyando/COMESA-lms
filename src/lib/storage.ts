@@ -34,6 +34,9 @@ export async function saveStorageFile(
 }
 
 export function resolveStorageFilePath(urlPath: string): string | null {
+  if (!urlPath || !urlPath.startsWith('/api/storage/')) {
+    return null;
+  }
   const cleanUrl = urlPath.replace(/^\/api\/storage\//, '');
   const targetPath = path.join(BASE_STORAGE_DIR, cleanUrl);
 
@@ -42,4 +45,34 @@ export function resolveStorageFilePath(urlPath: string): string | null {
     return null;
   }
   return targetPath;
+}
+
+export async function deleteStorageFile(urlPath?: string | null): Promise<boolean> {
+  if (!urlPath) return false;
+  const filePath = resolveStorageFilePath(urlPath);
+  if (filePath && fs.existsSync(filePath)) {
+    try {
+      await fs.promises.unlink(filePath);
+      return true;
+    } catch (err) {
+      console.warn(`Failed to delete storage file ${filePath}:`, err);
+    }
+  }
+  return false;
+}
+
+export async function cleanupLessonFiles(lesson: any) {
+  if (!lesson) return;
+  if (lesson.videoUrl) await deleteStorageFile(lesson.videoUrl);
+  if (lesson.videoThumbnailUrl) await deleteStorageFile(lesson.videoThumbnailUrl);
+  if (lesson.sourceFileUrl) await deleteStorageFile(lesson.sourceFileUrl);
+
+  // Clean up embedded images inside contentBlocks if stored locally
+  if (Array.isArray(lesson.contentBlocks)) {
+    for (const block of lesson.contentBlocks) {
+      if (block.type === 'image' && block.url) {
+        await deleteStorageFile(block.url);
+      }
+    }
+  }
 }

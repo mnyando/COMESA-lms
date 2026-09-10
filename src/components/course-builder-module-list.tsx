@@ -1,9 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus, Video, FileText, FileUp, Layers, Trash2, Edit, Check, X } from 'lucide-react';
+import {
+  Plus,
+  Video,
+  FileText,
+  FileUp,
+  Layers,
+  Trash2,
+  Edit,
+  Check,
+  X,
+  ChevronUp,
+  ChevronDown,
+} from 'lucide-react';
 import { AdminPublishToggle } from './admin-publish-toggle';
 
 export function CourseBuilderModuleList({
@@ -22,6 +34,10 @@ export function CourseBuilderModuleList({
   const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
   const [editingModuleTitle, setEditingModuleTitle] = useState('');
   const [savingModule, setSavingModule] = useState(false);
+
+  useEffect(() => {
+    setModules(initialModules);
+  }, [initialModules]);
 
   const handleAddModule = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,6 +129,69 @@ export function CourseBuilderModuleList({
     }
   };
 
+  // Reorder Modules
+  const handleMoveModule = async (index: number, direction: 'up' | 'down') => {
+    const newIdx = direction === 'up' ? index - 1 : index + 1;
+    if (newIdx < 0 || newIdx >= modules.length) return;
+
+    const reordered = [...modules];
+    const [moved] = reordered.splice(index, 1);
+    reordered.splice(newIdx, 0, moved);
+
+    setModules(reordered);
+
+    try {
+      const orderedIds = reordered.map((m) => m.id);
+      const res = await fetch('/api/admin/modules/reorder', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ courseId, orderedIds }),
+      });
+
+      if (!res.ok) {
+        setModules(initialModules);
+      } else {
+        router.refresh();
+      }
+    } catch (e) {
+      console.error('Module reorder failed:', e);
+      setModules(initialModules);
+    }
+  };
+
+  // Reorder Lessons inside Module
+  const handleMoveLesson = async (moduleIndex: number, lessonIndex: number, direction: 'up' | 'down') => {
+    const mod = modules[moduleIndex];
+    const newIdx = direction === 'up' ? lessonIndex - 1 : lessonIndex + 1;
+    if (newIdx < 0 || newIdx >= mod.lessons.length) return;
+
+    const updatedLessons = [...mod.lessons];
+    const [moved] = updatedLessons.splice(lessonIndex, 1);
+    updatedLessons.splice(newIdx, 0, moved);
+
+    const updatedModules = [...modules];
+    updatedModules[moduleIndex] = { ...mod, lessons: updatedLessons };
+    setModules(updatedModules);
+
+    try {
+      const orderedIds = updatedLessons.map((l) => l.id);
+      const res = await fetch('/api/admin/lessons/reorder', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moduleId: mod.id, orderedIds }),
+      });
+
+      if (!res.ok) {
+        setModules(initialModules);
+      } else {
+        router.refresh();
+      }
+    } catch (e) {
+      console.error('Lesson reorder failed:', e);
+      setModules(initialModules);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Modules List */}
@@ -124,6 +203,27 @@ export function CourseBuilderModuleList({
           {/* Module Header */}
           <div className="p-4 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 flex-1">
+              <div className="flex items-center gap-0.5 mr-1">
+                <button
+                  type="button"
+                  disabled={mIdx === 0}
+                  onClick={() => handleMoveModule(mIdx, 'up')}
+                  className="p-1 text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30"
+                  title="Move module up"
+                >
+                  <ChevronUp className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={mIdx === modules.length - 1}
+                  onClick={() => handleMoveModule(mIdx, 'down')}
+                  className="p-1 text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30"
+                  title="Move module down"
+                >
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
               <Layers className="w-4 h-4 text-[#4168DD] shrink-0" />
               {editingModuleId === mod.id ? (
                 <div className="flex items-center gap-2 flex-1 max-w-md">
@@ -195,12 +295,33 @@ export function CourseBuilderModuleList({
                 No lessons in this module yet. Click "+ Add Lesson" to add content.
               </div>
             ) : (
-              mod.lessons.map((lesson: any) => (
+              mod.lessons.map((lesson: any, lIdx: number) => (
                 <div
                   key={lesson.id}
                   className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        type="button"
+                        disabled={lIdx === 0}
+                        onClick={() => handleMoveLesson(mIdx, lIdx, 'up')}
+                        className="p-0.5 text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30"
+                        title="Move lesson up"
+                      >
+                        <ChevronUp className="w-3 h-3" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={lIdx === mod.lessons.length - 1}
+                        onClick={() => handleMoveLesson(mIdx, lIdx, 'down')}
+                        className="p-0.5 text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30"
+                        title="Move lesson down"
+                      >
+                        <ChevronDown className="w-3 h-3" />
+                      </button>
+                    </div>
+
                     {lesson.type === 'VIDEO' ? (
                       <Video className="w-4 h-4 text-[#4168DD] shrink-0" />
                     ) : lesson.type === 'CONVERTED_DOCUMENT' ? (

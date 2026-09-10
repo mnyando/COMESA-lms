@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { cleanupLessonFiles } from '@/lib/storage';
 
 export async function PATCH(
   req: Request,
@@ -12,7 +13,7 @@ export async function PATCH(
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
     const body = await req.json();
@@ -42,7 +43,16 @@ export async function DELETE(
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
+    }
+
+    // Clean up physical storage files for all lessons in this module before DB deletion
+    const lessons = await prisma.lesson.findMany({
+      where: { moduleId: params.id },
+    });
+
+    for (const lesson of lessons) {
+      await cleanupLessonFiles(lesson);
     }
 
     await prisma.module.delete({

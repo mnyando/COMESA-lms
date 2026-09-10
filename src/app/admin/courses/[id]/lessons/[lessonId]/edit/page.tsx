@@ -3,7 +3,18 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Video, FileText, FileUp, Loader2, CheckCircle2, Sparkles, Save, Trash2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  Video,
+  FileText,
+  FileUp,
+  Loader2,
+  CheckCircle2,
+  Sparkles,
+  Save,
+  Trash2,
+  AlertTriangle,
+} from 'lucide-react';
 import { BlockEditor } from '@/components/block-editor';
 import { ContentBlock } from '@/components/article-renderer';
 
@@ -21,7 +32,9 @@ function EditLessonForm({ courseId, lessonId }: { courseId: string; lessonId: st
   const [videoUrl, setVideoUrl] = useState('');
   const [videoThumbnailUrl, setVideoThumbnailUrl] = useState('');
 
-  // PDF Conversion State
+  // PDF Conversion & Confirmation Modal State
+  const [pendingPdfFile, setPendingPdfFile] = useState<File | null>(null);
+  const [showPdfConfirmModal, setShowPdfConfirmModal] = useState(false);
   const [pdfConverting, setPdfConverting] = useState(false);
   const [pdfConverted, setPdfConverted] = useState(false);
 
@@ -85,8 +98,19 @@ function EditLessonForm({ courseId, lessonId }: { courseId: string; lessonId: st
     }
   };
 
-  // PDF Conversion Handler
-  const handlePdfUpload = async (file: File) => {
+  // PDF Selection Handler - Triggers Modal Warning
+  const handleSelectPdfFile = (file: File) => {
+    setPendingPdfFile(file);
+    if (blocks.length > 0) {
+      setShowPdfConfirmModal(true);
+    } else {
+      executePdfConversion(file);
+    }
+  };
+
+  // PDF Conversion Execution
+  const executePdfConversion = async (file: File) => {
+    setShowPdfConfirmModal(false);
     try {
       setPdfConverting(true);
       setError('');
@@ -112,6 +136,7 @@ function EditLessonForm({ courseId, lessonId }: { courseId: string; lessonId: st
       setError(err.message || 'PDF extraction failed');
     } finally {
       setPdfConverting(false);
+      setPendingPdfFile(null);
     }
   };
 
@@ -182,7 +207,44 @@ function EditLessonForm({ courseId, lessonId }: { courseId: string; lessonId: st
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+      {/* PDF Re-conversion Warning Modal */}
+      {showPdfConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                Overwrite Lesson Content?
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Re-converting a new PDF will replace all existing content blocks for this lesson with the newly extracted document structure.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowPdfConfirmModal(false)}
+                className="flex-1 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => pendingPdfFile && executePdfConversion(pendingPdfFile)}
+                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 font-bold text-white text-xs transition-colors shadow-sm"
+              >
+                Yes, Re-convert PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
         <Link
@@ -367,7 +429,7 @@ function EditLessonForm({ courseId, lessonId }: { courseId: string; lessonId: st
                 <input
                   type="file"
                   accept="application/pdf"
-                  onChange={(e) => e.target.files?.[0] && handlePdfUpload(e.target.files[0])}
+                  onChange={(e) => e.target.files?.[0] && handleSelectPdfFile(e.target.files[0])}
                   className="hidden"
                   id="pdf-input"
                 />

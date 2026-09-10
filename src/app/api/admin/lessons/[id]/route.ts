@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { LessonType } from '@prisma/client';
+import { cleanupLessonFiles } from '@/lib/storage';
 
 export async function GET(
   req: Request,
@@ -13,7 +14,7 @@ export async function GET(
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
     const lesson = await prisma.lesson.findUnique({
@@ -47,11 +48,11 @@ export async function PATCH(
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
     const body = await req.json();
-    const { title, type, contentBlocks, videoUrl, videoThumbnailUrl, published, summary } = body;
+    const { title, type, contentBlocks, videoUrl, videoThumbnailUrl, published } = body;
 
     const lesson = await prisma.lesson.update({
       where: { id: params.id },
@@ -62,7 +63,6 @@ export async function PATCH(
         ...(videoUrl !== undefined && { videoUrl }),
         ...(videoThumbnailUrl !== undefined && { videoThumbnailUrl }),
         ...(published !== undefined && { published }),
-        ...(summary !== undefined && { summary }),
       },
     });
 
@@ -82,12 +82,19 @@ export async function DELETE(
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
-    await prisma.lesson.delete({
+    const lesson = await prisma.lesson.findUnique({
       where: { id: params.id },
     });
+
+    if (lesson) {
+      await cleanupLessonFiles(lesson);
+      await prisma.lesson.delete({
+        where: { id: params.id },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

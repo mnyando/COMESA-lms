@@ -2,6 +2,34 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import slugify from 'slugify';
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    const user = session?.user as any;
+
+    if (user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
+    }
+
+    const courses = await prisma.course.findMany({
+      include: {
+        modules: {
+          include: {
+            lessons: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return NextResponse.json(courses);
+  } catch (error) {
+    console.error('Error fetching admin courses:', error);
+    return NextResponse.json({ error: 'Failed to fetch courses' }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +37,7 @@ export async function POST(req: NextRequest) {
     const user = session?.user as any;
 
     if (user?.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
     const { title, description, coverImage } = await req.json();
@@ -18,10 +46,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Title and description are required.' }, { status: 400 });
     }
 
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)+/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+    const baseSlug = slugify(title, { lower: true, strict: true });
+    const existingCourse = await prisma.course.findUnique({
+      where: { slug: baseSlug },
+    });
+
+    const slug = existingCourse
+      ? `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`
+      : baseSlug;
 
     const course = await prisma.course.create({
       data: {
